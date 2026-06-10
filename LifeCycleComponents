@@ -1,0 +1,146 @@
+React Component Lifecycle
+
+The Component Lifecycle is the sequence of stages a component goes through from creation to removal.
+
+There are 3 main phases:
+
+1. Mounting   → Component is created and added to the DOM
+2. Updating   → Component re-renders when state/props change
+3. Unmounting → Component is removed from the DOM
+1. Mounting Phase
+
+When the component appears on the screen for the first time.
+
+Functional Component
+import { useEffect } from "react";
+
+function App() {
+  useEffect(() => {
+    console.log("Component Mounted");
+  }, []);
+
+  return <h1>Hello</h1>;
+}
+
+Output:
+
+Component Mounted
+
+The empty dependency array [] means the effect runs only once after the first render.
+
+2. Updating Phase
+
+Occurs when:
+
+State changes
+Props change
+import { useState, useEffect } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    console.log("Component Updated");
+  }, [count]);
+
+  return (
+    <>
+      <h1>{count}</h1>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </>
+  );
+}
+
+Every time count changes:
+
+Component Updated
+
+is printed.
+
+3. Unmounting Phase
+
+Occurs when a component is removed from the DOM.
+
+import { useEffect } from "react";
+
+function Child() {
+  useEffect(() => {
+    console.log("Mounted");
+
+    return () => {
+      console.log("Unmounted");
+    };
+  }, []);
+
+  return <h2>Child Component</h2>;
+}
+
+The function returned from useEffect is called the cleanup function.
+
+return () => {
+  console.log("Unmounted");
+};
+
+It runs before the component is removed.
+
+Complete Example
+import { useState, useEffect } from "react";
+
+function Child() {
+  useEffect(() => {
+    console.log("Mounted");
+
+    return () => {
+      console.log("Unmounted");
+    };
+  }, []);
+
+  return <h2>Child Component</h2>;
+}
+
+function App() {
+  const [show, setShow] = useState(true);
+
+  return (
+    <>
+      <button onClick={() => setShow(!show)}>
+        Toggle
+      </button>
+
+      {show && <Child />}
+    </>
+  );
+}
+
+export default App;
+
+Console:
+
+Mounted
+Unmounted
+Mounted
+Unmounted
+...
+Lifecycle in Class Components
+Phase	Method
+Mounting	componentDidMount()
+Updating	componentDidUpdate()
+Unmounting	componentWillUnmount()
+
+Example:
+
+class App extends React.Component {
+  componentDidMount() {
+    console.log("Mounted");
+  }
+
+  componentDidUpdate() {
+    console.log("Updated");
+  }
+
+  componentWillUnmount() {
+    console.log("Unmounted");
+  }
+}
